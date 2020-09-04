@@ -41,7 +41,7 @@ def get_homework_statuses(current_timestamp):
     response = requests.get(url, headers=headers, params=params).json()
     try:
         return response
-    except requests.ConnectionError as eee:
+    except requests.exceptions.ConnectionError as eee:
         return f'Инвалид {eee}'
 
 
