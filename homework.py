@@ -15,12 +15,12 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN, request=proxy)
 
 
 def parse_homework_status(homework):
+    homework_name = homework["homework_name"]
     if homework.get('homework_name') is None:
         raise KeyError('Ошибка в homework_name')
-    homework_name = homework["homework_name"]
+    status = homework['status']
     if homework.get('status') is None:
         raise KeyError('Ошибка в status')
-    status = homework['status']
     if status == 'approved' or 'rejected':
         if status != 'approved':
             verdict = 'К сожалению в работе нашлись ошибки.'
@@ -41,8 +41,8 @@ def get_homework_statuses(current_timestamp):
     response = requests.get(url, headers=headers, params=params).json()
     try:
         return response
-    except ValueError:
-        return 'Инвалид JSON'
+    except requests.ConnectionError as eee:
+        return f'Инвалид {eee}'
 
 
 def send_message(message):
