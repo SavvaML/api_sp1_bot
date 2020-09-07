@@ -15,8 +15,8 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN, request=proxy)
 
 
 def parse_homework_status(homework):
-    homework_name = homework["homework_name"]
-    if homework.get('homework_name') is None:
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
         raise KeyError('Ошибка в homework_name')
     status = homework['status']
     if homework.get('status') is None:
@@ -25,12 +25,12 @@ def parse_homework_status(homework):
         if status != 'approved':
             verdict = 'К сожалению в работе нашлись ошибки.'
         else:
-            verdict = 'Ревьюеру всё понравилось, ' \
-                      'можно приступать к следующему уроку.'
+            verdict = ('Ревьюеру всё понравилось, '
+                       'можно приступать к следующему уроку.')
     else:
         return "Такого ответа мы не ждали"
-    return f'У вас проверили работу ' \
-           f'"{homework_name}"!\n\n{verdict}'
+    return ('У вас проверили работу '
+            f'{homework_name}!\n\n {verdict}')
 
 
 def get_homework_statuses(current_timestamp):
@@ -38,9 +38,8 @@ def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
         current_timestamp = int(time.time())
     params = {'from_date': current_timestamp}
-    response = requests.get(url, headers=headers, params=params).json()
     try:
-        return response
+        return requests.get(url, headers=headers, params=params).json()
     except requests.exceptions.ConnectionError as eee:
         return f'Инвалид {eee}'
 
@@ -56,8 +55,9 @@ def main():
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(parse_homework_status(new_homework.get(
-                    'homeworks')[0]))
+                send_message(parse_homework_status(
+                    new_homework.get('homeworks')[0])
+                )
             current_timestamp = new_homework.get(
                 'current_date')
             time.sleep(900)
