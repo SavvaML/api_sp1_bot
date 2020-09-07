@@ -18,8 +18,8 @@ def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
     if homework_name is None:
         raise KeyError('Ошибка в homework_name')
-    status = homework['status']
-    if homework.get('status') is None:
+    status = homework.get('status')
+    if status is None:
         raise KeyError('Ошибка в status')
     if status == 'approved' or 'rejected':
         if status != 'approved':
@@ -30,7 +30,7 @@ def parse_homework_status(homework):
     else:
         return "Такого ответа мы не ждали"
     return ('У вас проверили работу '
-            f'{homework_name}!\n\n {verdict}')
+            f'"{homework_name}"!\n\n {verdict}')
 
 
 def get_homework_statuses(current_timestamp):
