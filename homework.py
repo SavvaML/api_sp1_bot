@@ -21,14 +21,13 @@ def parse_homework_status(homework):
     status = homework.get('status')
     if status is None:
         raise KeyError('Ошибка в status')
-    if status == 'approved' or 'rejected':
-        if status != 'approved':
-            verdict = 'К сожалению в работе нашлись ошибки.'
-        else:
-            verdict = ('Ревьюеру всё понравилось, '
-                       'можно приступать к следующему уроку.')
-    else:
-        return "Такого ответа мы не ждали"
+    if status not in ("approved", "rejected"):
+        raise ValueError('Не найден в списке доступных')
+    if status == "rejected":
+        verdict = 'К сожалению в работе нашлись ошибки.'
+    if status == "approved":
+        verdict = ('Ревьюеру всё понравилось, '
+                   'можно приступать к следующему уроку.')
     return ('У вас проверили работу '
             f'"{homework_name}"!\n\n {verdict}')
 
